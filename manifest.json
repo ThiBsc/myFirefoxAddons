@@ -1,0 +1,36 @@
+{
+    "manifest_version": 2,
+    "name": "Youtube controler",
+    "version": "0.1",
+
+    "description": "Control an existing youtube tab by this remote",
+    "homepage_url": "https://github.com/thibsc/youtube-remote",
+    
+    "icons": {
+        "48": "icons/play-button.png"
+    },
+
+    "content_scripts": [
+        {
+            "js": ["content_scripts/youtube_getter.js"],
+            "matches": ["*://www.youtube.com/*"],
+            "run_at": "document_idle"
+        }
+    ],
+
+    "permissions": [
+        "*://www.youtube.com/*",
+        "tabs"
+    ],
+
+    "browser_action": {
+        "default_icon": "icons/play-button.png",
+        "default_title": "Youtube remote",
+        "default_popup": "popup/youtube_remote.html"
+    },
+
+    "web_accessible_resources": [
+        "content_scripts/youtube_getter.js"
+    ]
+
+}
