@@ -14,7 +14,7 @@
         {
             "js": ["content_scripts/youtube_getter.js"],
             "matches": ["*://www.youtube.com/*"],
-            "run_at": "document_idle"
+            "run_at": "document_end"
         }
     ],
 
