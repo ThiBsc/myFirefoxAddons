@@ -48,6 +48,27 @@ function nextQuery(tabs)
 function searchQuery(tabs)
 {
     if (tabs.length > 0){
+        // Display a loading spinner
+        /**
+         *  <div class="d-flex justify-content-center">
+                <div class="spinner-grow text-warning justify-content-center" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+         */
+        document.getElementById("video-list").innerHTML = "";
+        var div1 = document.createElement('div');
+        div1.setAttribute('class', 'd-flex justify-content-center');
+        var div2 = document.createElement('div');
+        div2.setAttribute('class', 'spinner-grow text-warning justify-content-center');
+        div2.setAttribute('style', 'width: 3rem; height: 3rem;');
+        div2.setAttribute('role', 'status');
+        var span = document.createElement('span');
+        span.setAttribute('class', 'sr-only');
+        span.appendChild(document.createTextNode('Loading...'));
+        div1.appendChild(div2);
+        div1.appendChild(span);
+        document.getElementById("video-list").appendChild(div1);
         // Take the first
         let tab = tabs[0];
         document.getElementById("youtube-tab").textContent = tab.title;
@@ -65,13 +86,13 @@ function searchQuery(tabs)
 // Action succeed
 function succeedQuery(success)
 {
-    document.getElementById("scriptStatus").style.background = "green";
+    //document.getElementById("scriptStatus").style.background = "green";
 }
 
 // Action fail
 function errorQuery(error)
 {
-    document.getElementById("scriptStatus").style.background = "darkred";
+    //document.getElementById("scriptStatus").style.background = "darkred";
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -128,10 +149,10 @@ function handleMessage(request, sender, sendResponse) {
     document.getElementById("video-list").innerHTML = "";
     var jsonObj = JSON.parse(request);
     for (var title in jsonObj){
-        var video = document.createElement('li');
+        var video = document.createElement('button');
         var videoTitle = document.createTextNode(title);
         video.setAttribute('data-value', jsonObj[title]);
-        video.setAttribute('class', "youtube-url");
+        video.setAttribute('class', 'youtube-url list-group-item list-group-item-action');
         video.appendChild(videoTitle);
         document.getElementById("video-list").appendChild(video);
     }
