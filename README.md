@@ -1,5 +1,5 @@
 # youtube-remote
-A firefox AddOn to control a youtube tab.  
+A Firefox Add-on to control a youtube tab.  
 If you have several Youtube tabs, it controls the first one.
 
 ![addon](screenshot/addon.png)
@@ -19,5 +19,8 @@ Open firefox and follow these steps:
 - Select an Add-on file (for example `manifest.json`)
 
 ## Troubleshooting
-If the video does not start, allow the autoplay:
+If the video does not start, allow the autoplay:  
 ![autoplay](screenshot/allow_autoplay.png)
+
+## Icons
+Youtube icon made by [Freepik](https://www.freepik.com/) from [Flaticon](www.flaticon.com)  
