@@ -2,8 +2,8 @@ html, body {
     width: 300px;
 }
 
-.control {
-    margin: 2px 50%;
+.control > button {
+    margin: 5px auto;
 }
 
 #youtube-tab::before {
