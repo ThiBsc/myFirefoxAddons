@@ -1,4 +1,5 @@
 # youtube-remote
+[![License: MIT](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://opensource.org/licenses/gpl-3.0)  
 A Firefox Add-on to control a youtube tab.  
 If you have several Youtube tabs, it controls the first one.
 
