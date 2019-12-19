@@ -47,7 +47,7 @@ function nextQuery(tabs)
 // Search movie button
 function searchQuery(tabs)
 {
-    if (tabs.length > 0){
+    if (tabs.length > 0) {
         // Display the loading spinner
         document.querySelector("#list-loader").className += " visible";
         // Clean the list
@@ -56,7 +56,7 @@ function searchQuery(tabs)
         let tab = tabs[0];
         document.getElementById("youtube-tab").textContent = tab.title;
         var search = document.getElementById("youtube-search").value;
-        var nextCode = "window.location.href = '" + youtube + "results?search_query=" + search.split(" ").join('+') + "'";
+        var nextCode = "window.location.href = \"" + youtube + "results?search_query=" + search.split(" ").join('+') + "\"";
         var es = browser.tabs.executeScript(tab.id, {
             code: nextCode
         });
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // For action on the tab
 document.addEventListener("click", (e) => {
     if (e.target.classList.contains("play")) {
-        // Play / Pause current movie
+        // Play / Pause current movi
         var gettingYoutubeTab = browser.tabs.query({
             title: "*YouTube"
         });
@@ -129,21 +129,21 @@ document.getElementById('youtube-search').addEventListener("keydown", (e) => {
 // Getting message from youtube_getter.js
 function handleMessage(request, sender, sendResponse) {
     // Hide the loading spinner
-    document.querySelector("#list-loader").className -= " visible";
+    document.querySelector("#list-loader").className = document.querySelector("#list-loader").className.replace('visible', '');
     // Remove last search titles
     document.querySelector("#video-list").innerHTML = "";
-    if (jsonObj && jsonObj.length > 0) {
-        var jsonObj = JSON.parse(request);
-        for (var title in jsonObj) {
-            var video = document.createElement('li');
-            var videoTitle = document.createTextNode(title);
+    let jsonObj = JSON.parse(request);
+    if (Object.keys(jsonObj).length < 1) {
+        document.querySelector("#video-list").innerHTML = "No results";
+    } else {
+        for (let title in jsonObj) {
+            let video = document.createElement('li');
+            let videoTitle = document.createTextNode(title);
             video.setAttribute('data-value', jsonObj[title]);
             video.setAttribute('class', 'youtube-url list-group-item list-group-item-action');
             video.appendChild(videoTitle);
             document.querySelector("#video-list").appendChild(video);
         }
-    } else {
-        document.querySelector("#video-list").innerHTML = "No results";
     }
     //console.log("Message from the content script: " + request.greeting);
     sendResponse({response: "Message received"});
