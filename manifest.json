@@ -24,9 +24,9 @@
     ],
 
     "browser_action": {
-        "default_icon": "icons/play-button.png",
+        "default_icon": "assets/icons/play-button.png",
         "default_title": "Youtube remote",
-        "default_popup": "popup/youtube_remote.html"
+        "default_popup": "src/youtube_remote.html"
     },
 
     "web_accessible_resources": [
