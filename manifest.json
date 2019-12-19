@@ -7,7 +7,7 @@
     "homepage_url": "https://github.com/thibsc/youtube-remote",
     
     "icons": {
-        "48": "icons/play-button.png"
+        "48": "assets/icons/play-button.png"
     },
 
     "content_scripts": [
