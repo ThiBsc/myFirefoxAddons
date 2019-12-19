@@ -24,4 +24,5 @@ If the video does not start, allow the autoplay:
 ![autoplay](screenshot/allow_autoplay.png)
 
 ## Icons
-Youtube icon made by [Freepik](https://www.freepik.com/) from [Flaticon](www.flaticon.com)  
+Youtube icon made by [Freepik](https://www.freepik.com/) from [Flaticon](www.flaticon.com)
+
