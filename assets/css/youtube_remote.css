@@ -9,6 +9,8 @@ body {
     width: 400px;
 }
 
+/* Player */
+
 #player {
     display: flex;
     flex-direction: row;
@@ -23,7 +25,9 @@ body {
     color: white;
 }
 
-#player #youtube-tab {
+/* Playing video : title and actions */
+
+#player #youtube-playing {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -46,6 +50,8 @@ body {
     cursor: pointer;
 }
 
+/* Video search : input */
+
 #search {
     display: flex;
     flex-direction: column;
@@ -54,13 +60,10 @@ body {
     padding: 10px;
 }
 
-#search .spinner {
-    display: none;
-    margin-top: 20px;
-}
-
-#search .spinner.visible {
-    display: block;
+#search input {
+    flex: 1;
+    padding: 7px 0;
+    border: none;
 }
 
 #search .input-group {
@@ -71,10 +74,15 @@ body {
     border-bottom: 2px solid var(--secondary-color);
 }
 
-#search input {
-    flex: 1;
-    padding: 7px 0;
-    border: none;
+/* Video search : spinner and results */
+
+#search .spinner {
+    display: none;
+    margin-top: 20px;
+}
+
+#search .spinner.visible {
+    display: block;
 }
 
 #search ul {
@@ -82,8 +90,26 @@ body {
     list-style: none;
 }
 
+/* Video search results : item */
+
+/*
 #search ul li {
     padding: 5px;
+    transition: var(--transition);
+}
+
+#search ul li:not(:last-of-type) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+#search ul li:hover {
+    color: white;
+    background: var(--primary-color);
+    cursor: pointer;
+}
+*/
+
+#search ul li {
     transition: var(--transition);
 }
 

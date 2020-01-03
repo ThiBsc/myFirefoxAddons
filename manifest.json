@@ -12,7 +12,7 @@
 
     "content_scripts": [
         {
-            "js": ["content_scripts/youtube_getter.js"],
+            "js": ["assets/js/youtube_getter.js"],
             "matches": ["*://www.youtube.com/*"],
             "run_at": "document_end"
         }
@@ -30,7 +30,7 @@
     },
 
     "web_accessible_resources": [
-        "content_scripts/youtube_getter.js"
+        "assets/js/youtube_getter.js"
     ]
 
 }
