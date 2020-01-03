@@ -123,23 +123,6 @@ i.material-icons {
 
 /* Video search results : item */
 
-/*
-#search #video-list li {
-    padding: 5px;
-    transition: var(--transition);
-}
-
-#search #video-list li:not(:last-of-type) {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-#search #video-list li:hover {
-    color: white;
-    background: var(--primary-color);
-    cursor: pointer;
-}
-*/
-
 #search #video-list li {
     display: flex;
     flex-direction: row;

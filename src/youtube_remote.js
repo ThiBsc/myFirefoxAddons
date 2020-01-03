@@ -36,9 +36,11 @@ async function execClickQuery(selector)
     let tab = await getFirstYoutubeTab();
 
     document.getElementById("youtube-playing").textContent = tab.title;
-    var playPauseCode = "document.getElementsByClassName('"+selector+" ytp-button')[0].click();"
+    var nextCode = `
+        document.querySelectorAll('.${selector}.ytp-button')[1].click();
+    `
     var test = browser.tabs.executeScript(tab.id, {
-        code: playPauseCode
+        code: nextCode
     });
     test.then(succeedQuery, errorQuery);
 }
