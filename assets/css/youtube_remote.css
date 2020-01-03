@@ -144,7 +144,6 @@ i.material-icons {
     display: flex;
     flex-direction: row;
     transition: var(--transition);
-    background: rgba(0, 0, 0, 0.05);
 }
 
 #search #video-list li:not(:last-of-type) {
@@ -158,7 +157,6 @@ i.material-icons {
 }
 
 #search #video-list .thumbnail {
-    display: none;
     overflow: hidden;
 }
 
@@ -190,7 +188,7 @@ i.material-icons {
 
 #search #video-list li .metadata .content .title {
     overflow: hidden;
-    height: 26px;
+    height: 30px;
 }
 
 #search #video-list li .metadata .footer {

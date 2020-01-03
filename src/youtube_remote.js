@@ -31,33 +31,19 @@ function getFirstYoutubeTab() {
     return tab_yt
 }
 
-// Play/Pause button
-async function playPauseQuery()
-{    
+async function execClickQuery(selector)
+{
     let tab = await getFirstYoutubeTab();
-    console.log(tab)
+
     document.getElementById("youtube-playing").textContent = tab.title;
-    var playPauseCode = "document.getElementsByClassName('ytp-play-button ytp-button')[0].click();"
+    var playPauseCode = "document.getElementsByClassName('"+selector+" ytp-button')[0].click();"
     var test = browser.tabs.executeScript(tab.id, {
         code: playPauseCode
     });
     test.then(succeedQuery, errorQuery);
 }
 
-// Next play button
-async function nextQuery()
-{
-    let tab = await getFirstYoutubeTab();
-
-    document.getElementById("youtube-playing").textContent = tab.title;
-    var nextCode = "document.getElementsByClassName('ytp-next-button ytp-button')[0].click();"
-    var test = browser.tabs.executeScript(tab.id, {
-        code: nextCode
-    });
-    test.then(succeedQuery, errorQuery);
-}
-
-// Search movie button
+// Search video button
 async function searchQuery()
 {
     let tab = await getFirstYoutubeTab();
@@ -66,33 +52,38 @@ async function searchQuery()
     document.querySelector("#list-loader").className += " visible";
 
     // Clean the list
-    document.getElementById("video-list").innerHTML = "";
+    document.querySelector("#video-list").innerHTML = "";
     document.getElementById("youtube-playing").textContent = tab.title;
     let search = document.getElementById("youtube-search").value;
 
-    // var nextCode = "window.location.href = \"" + youtube + "results?search_query=" + search.split(" ").join('+') + "\"";
-    let nextCode = 'document.querySelector("input#search").value = "'+search+'"; document.querySelector("#search-icon-legacy").click()'
+    // Send the "I" key if needed
+    let nextCode = `
+        if (document.querySelector("ytd-miniplayer").getAttribute("active") === null) {
+            document.dispatchEvent(new KeyboardEvent("keydown", { keyCode: 73 }))
+        }
+    `
     let es = browser.tabs.executeScript(tab.id, {
         code: nextCode
     });
     es.then(() => {
-        retrieveMovies(tab)
-    }, (error) => {
-        console.log(`Error: ${error}`);
-    });
+        // Exec search
+        setTimeout(() => {
+            let nextCode = 'document.querySelector("input#search").value = "'+search+'"; document.querySelector("#search-icon-legacy").click()'
+            let es = browser.tabs.executeScript(tab.id, {
+                code: nextCode
+            });
+            es.then(() => {
+                retrieveVideos(tab)
+            }, errorQuery);
+        }, 1000)
+    }, errorQuery);
 }
 
-function retrieveMovies(tab) {
-    // Hide the loading spinner
-    document.querySelector("#list-loader").className = document.querySelector("#list-loader").className.replace('visible', '');
-
-    // Remove last search titles
-    document.querySelector("#video-list").innerHTML = "";
-
+function retrieveVideos(tab) {
     // Retrieve list of results from YT
     let nextCode = `
-        domMovies = document.querySelectorAll("ytd-item-section-renderer div#contents ytd-video-renderer");
-        results = Array.prototype.slice.call(domMovies).map((x) => {
+        domVideos = document.querySelectorAll("ytd-item-section-renderer div#contents ytd-video-renderer");
+        results = Array.prototype.slice.call(domVideos).map((x) => {
             return {
                 url: x.querySelector("#video-title").href,
                 title: x.querySelector("#video-title").title,
@@ -104,34 +95,37 @@ function retrieveMovies(tab) {
         results.slice(0, 5);
     `;
 
-    // setTimeout(() => {
+    setTimeout(() => {
         let es = browser.tabs.executeScript(tab.id, {
             code: nextCode,
-            // allFrames: true
             runAt: "document_idle",
         });
-        es.then((result) => {
-            displayMovies(tab, result[0])
-        }, (error) => {
-            console.log(`Error: ${error}`);
-        });
-    // }, 1000)
+        es.then(
+            (result) => {
+                displayVideos(result[0])
+            },
+            errorQuery
+        );
+    }, 1500)
 }
 
-function displayMovies(tab, movies) {
-    if (movies.length < 1) {
+function displayVideos(videos) {
+    if (videos.length < 1) {
         document.querySelector('#video-list').innerHTML = 'No results';
     } else {
-        for (let movie of movies) {
+        // Hide the loading spinner
+        document.querySelector("#list-loader").className = document.querySelector("#list-loader").className.replace('visible', '');
+
+        for (let videoYT of videos) {
             let video = document.createElement('li');
-            video.setAttribute('data-value', movie.title);
+            video.setAttribute('data-value', videoYT.url);
             video.setAttribute('class', 'youtube-url list-group-item list-group-item-action');
 
             // Video thumbnail
             let thumbnail = document.createElement('div');
             thumbnail.className = 'thumbnail';
             let thumbnailImg = document.createElement('img');
-            thumbnailImg.src = movie.thumbnail;
+            thumbnailImg.src = videoYT.thumbnail;
             thumbnail.appendChild(thumbnailImg);
             video.appendChild(thumbnail);
 
@@ -148,15 +142,16 @@ function displayMovies(tab, movies) {
                     // Video title
                     let title = document.createElement('div');
                     title.className = 'title';
-                    title.innerHTML = movie.title;
+                    title.innerHTML = videoYT.title;
                     content.appendChild(title);
 
                     // Video author
                     let author = document.createElement('div');
                     author.className = 'subtitle'
-                    author.innerHTML = movie.author;
+                    author.innerHTML = videoYT.author;
                     content.appendChild(author);
 
+                /*
                 // Footer
                 let footer = document.createElement('div');
                 footer.className = 'footer';
@@ -165,96 +160,54 @@ function displayMovies(tab, movies) {
                     // Video views
                     let views = document.createElement('div');
                     views.className = 'info'
-                    views.innerHTML = `${movie.views}<i class="material-icons">remove_red_eye</i>`;
+                    views.innerHTML = `${videoYT.views}<i class="material-icons">remove_red_eye</i>`;
                     footer.appendChild(views);
+                */
 
             document.querySelector('#video-list').appendChild(video);
+            
+            video.addEventListener('click', loadVideo)
         }
     }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Init popup
-    browser.tabs
-        .query({
-            title: "*YouTube"
-        })
-        .then((tabs) => {
-            document.getElementById("youtube-playing").innerHTML = tabs[0].title;
-        });
+async function loadVideo(event) {
+    let target = event.currentTarget
+
+    let tab = await getFirstYoutubeTab();
+
+    var nextCode = "document.querySelector(\"a[href='" + target.getAttribute("data-value").substr(youtube.length-1) + "']\").click()";
+    var es = browser.tabs.executeScript(tab.id, {
+        code: nextCode
+    });
+    es.then(succeedQuery, errorQuery);
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    let tab = await getFirstYoutubeTab();
+    document.getElementById("youtube-playing").innerHTML = tab.title;
 });
 
 // For action on the tab
-document.addEventListener("click", (e) => {
+document.addEventListener("click", async (e) => {
     if (e.target.classList.contains("play")) {
-        // Play / Pause current movie
-        var gettingYoutubeTab = browser.tabs.query({
-            title: "*YouTube"
-        });
-        gettingYoutubeTab.then(playPauseQuery, errorQuery);
+        execClickQuery("ytp-play-button");
     } else if (e.target.classList.contains("next")) {
-        // Run the next movie
-        var gettingYoutubeTab = browser.tabs.query({
-            title: "*YouTube"
-        });
-        gettingYoutubeTab.then(nextQuery, errorQuery);
-    } else if (e.target.classList.contains("youtube-url")) {
-        // Start a movie
-        var gettingYoutubeTab = browser.tabs.query({
-            title: "*YouTube"
-        }).then((tabs) => {
-            var nextCode = "document.querySelector(\"a[href='" + e.target.getAttribute("data-value").substr(youtube.length-1) + "']\").click()";
-            var es = browser.tabs.executeScript(tabs[0].id, {
-                code: nextCode
-            });
-            es.then(succeedQuery, errorQuery);
-        });
+        execClickQuery("ytp-next-button");
     }
 });
 
 // For video search
 document.getElementById('youtube-search').addEventListener("keydown", (e) => {
-    searchQuery()
+    if (e.key == "Enter") {
+        searchQuery();
+    }
 });
 
-// Getting message from youtube_getter.js
-/*function handleMessage(request, sender, sendResponse) {
-    // Hide the loading spinner
-    document.querySelector("#list-loader").className = document.querySelector("#list-loader").className.replace('visible', '');
-    // Remove last search titles
-    document.querySelector("#video-list").innerHTML = "";
-    let jsonObj = JSON.parse(request);
-    if (Object.keys(jsonObj).length < 1) {
-        document.querySelector("#video-list").innerHTML = "No results";
-    } else {
-        for (let title in jsonObj) {
-            let video = document.createElement('li');
-            let videoTitle = document.createTextNode(title);
-            video.setAttribute('data-value', jsonObj[title]);
-            video.setAttribute('class', 'youtube-url list-group-item list-group-item-action');
-            video.appendChild(videoTitle);
-            document.querySelector("#video-list").appendChild(video);
-        }
-    }
-    //console.log("Message from the content script: " + request.greeting);
-    sendResponse({response: "Message received"});
-}
-*/
-
 // Action succeed
-function succeedQuery(success)
-{
-    // document.getElementById("scriptStatus").style.background = "green";
-}
+function succeedQuery(success) { }
 
 // Action fail
-function errorQuery(error)
-{
-    // document.getElementById("scriptStatus").style.background = "darkred";
+function errorQuery(error) {
+    console.log(`Error: ${error}`);
 }
-
-
-// browser.runtime.onMessage.addListener(handleMessage);
-// browser.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//     alert(request)
-// });
