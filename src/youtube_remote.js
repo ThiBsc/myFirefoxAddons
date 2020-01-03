@@ -135,22 +135,38 @@ function displayMovies(tab, movies) {
             thumbnail.appendChild(thumbnailImg);
             video.appendChild(thumbnail);
 
-            // Video title
-            let title = document.createElement('h2');
-            title.innerHTML = movie.title;
-            video.appendChild(title);
+            // Metadata
+            let metadata = document.createElement('div');
+            metadata.className = 'metadata';
+            video.appendChild(metadata);
 
-            // Video author
-            let author = document.createElement('div');
-            author.className = 'author'
-            author.innerHTML = movie.author;
-            video.appendChild(author);
+                // Content
+                let content = document.createElement('div');
+                content.className = 'content';
+                metadata.appendChild(content);
 
-            // Video views
-            let views = document.createElement('div');
-            views.className = 'views'
-            views.innerHTML = `${movie.views}<i class="material-icons">remove_red_eye</i>`;
-            video.appendChild(views);
+                    // Video title
+                    let title = document.createElement('div');
+                    title.className = 'title';
+                    title.innerHTML = movie.title;
+                    content.appendChild(title);
+
+                    // Video author
+                    let author = document.createElement('div');
+                    author.className = 'subtitle'
+                    author.innerHTML = movie.author;
+                    content.appendChild(author);
+
+                // Footer
+                let footer = document.createElement('div');
+                footer.className = 'footer';
+                metadata.appendChild(footer);
+
+                    // Video views
+                    let views = document.createElement('div');
+                    views.className = 'info'
+                    views.innerHTML = `${movie.views}<i class="material-icons">remove_red_eye</i>`;
+                    footer.appendChild(views);
 
             document.querySelector('#video-list').appendChild(video);
         }
