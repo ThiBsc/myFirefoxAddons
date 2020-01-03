@@ -37,7 +37,12 @@ async function execClickQuery(selector)
 
     document.getElementById("youtube-playing").textContent = tab.title;
     var nextCode = `
-        document.querySelectorAll('.${selector}.ytp-button')[1].click();
+        var buttonsSelected = document.querySelectorAll('.${selector}.ytp-button');
+        if (buttonsSelected.length > 1) {
+            buttonsSelected[1].click();
+        } else {
+            buttonsSelected[0].click();
+        }
     `
     var test = browser.tabs.executeScript(tab.id, {
         code: nextCode
@@ -108,7 +113,7 @@ function retrieveVideos(tab) {
             },
             errorQuery
         );
-    }, 1500)
+    }, 1500) // 1500 => Dépend de la vitesse du réseau de l'utilisateur ; il faut trouver un moyen de savoir quand les images et au moins 5 résultats sont chargés
 }
 
 function displayVideos(videos) {
