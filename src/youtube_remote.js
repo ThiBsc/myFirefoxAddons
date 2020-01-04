@@ -193,6 +193,7 @@ async function loadVideo(event) {
 document.addEventListener('DOMContentLoaded', async function () {
     let tab = await getFirstYoutubeTab();
     document.getElementById("youtube-playing").innerHTML = tab.title;
+    retrieveVideos(tab);
 });
 
 // For action on the tab
