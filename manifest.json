@@ -10,14 +10,6 @@
         "48": "assets/icons/play-button.png"
     },
 
-    "content_scripts": [
-        {
-            "js": ["content_scripts/youtube_getter.js"],
-            "matches": ["*://www.youtube.com/*"],
-            "run_at": "document_end"
-        }
-    ],
-
     "permissions": [
         "*://www.youtube.com/*",
         "tabs"
@@ -30,7 +22,7 @@
     },
 
     "web_accessible_resources": [
-        "content_scripts/youtube_getter.js"
+        "assets/js/youtube_getter.js"
     ]
 
 }
