@@ -1,5 +1,6 @@
-console.log("DomElementDisplay loaded");
+//console.log("DomElementDisplay loaded");
 
+// The inspector div
 let elemInspector = document.createElement("div");
 elemInspector.style.position = 'fixed';
 elemInspector.style.background = 'white';
