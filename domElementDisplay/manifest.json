@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "name": "Dom Element Display",
+    "version": "0.1",
+
+    "description": "Display the html representation of the wanted element",
+    "homepage_url": "https://github.com/thibsc/myFirefoxAddons",
+    
+    "icons": {
+        "48": "assets/icons/programming.png"
+    },
+
+    "content_scripts": [
+        {
+            "matches": ["*://*/*"],
+            "js": ["src/displayer.js"]
+        }
+    ],
+
+    "browser_action": {
+        "default_icon": "assets/icons/programming.png",
+        "default_title": "Dom Element Display"
+    }
+
+}
